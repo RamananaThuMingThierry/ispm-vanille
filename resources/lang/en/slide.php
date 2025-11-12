@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'title' => 'Title',
+    'subtitle' => 'Subtitle',
+    'description' => 'Description',
+    'order' => 'Order',
+    'image' => 'Image',
+    'actions' => 'Actions',
+    'new' => 'New slideshow',
+    'details' => 'Slide details',
+    'edit' => 'Edit slideshow',
+    'deleted' => 'Delete slideshow',
+    'added' => 'The image has been added.',
+    'status_updated' => 'The status has been updated.',
+    'title_required' => 'The title is required.',
+    'title_max' => 'The title may not be greater than 255 characters.',
+    'subtitle_max' => 'The subtitle may not be greater than 255 characters.',
+    'order_required' => 'The order is required.',
+    'order_integer' => 'The order must be an integer.',
+    'order_min' => 'The order must be at least 1.',
+    'order_max' => 'The order may not be greater than 4.',
+    'image_required' => 'The image is required.',
+    'image_image' => 'The file must be an image.',
+    'image_mimes' => 'The image must be a file of type: jpeg, png, jpg.',
+    'image_max' => 'The image may not be greater than 2 MB.',
+    'limit_reached' => 'You can only add up to 4 slides.',
+];

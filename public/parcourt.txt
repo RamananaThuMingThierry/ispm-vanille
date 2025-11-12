@@ -1,0 +1,2 @@
+# Personnaliser l'email en laravel
+php artisan vendor:publish --tag=laravel-mail

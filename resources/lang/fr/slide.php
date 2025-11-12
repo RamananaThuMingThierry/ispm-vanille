@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'title' => 'Titre',
+    'subtitle' => 'Sous-titre',
+    'description' => 'Description',
+    'order' => 'Ordre',
+    'image' => 'Image',
+    'actions' => 'Actions',
+    'new' => 'Nouveau diaporama',
+    'details' => 'Détails du diaporama',
+    'edit' => 'Modifier le diaporama',
+    'deleted' => 'Supprimer le diaporama',
+    'added' => 'L’image a été ajoutée.',
+    'status_updated' => 'Le statut a été mis à jour.',
+    'title_required' => 'Le titre est requis.',
+    'title_max' => 'Le titre ne peut pas dépasser 255 caractères.',
+    'subtitle_max' => 'Le sous-titre ne peut pas dépasser 255 caractères.',
+    'order_required' => 'L’ordre est requis.',
+    'order_integer' => 'L’ordre doit être un nombre entier.',
+    'order_min' => 'L’ordre doit être au minimum 1.',
+    'order_max' => 'L’ordre ne peut pas dépasser 4.',
+    'image_required' => 'L’image est requise.',
+    'image_image' => 'Le fichier doit être une image.',
+    'image_mimes' => 'L’image doit être de type : jpeg, png, jpg.',
+    'image_max' => 'L’image ne peut pas dépasser 2 Mo.',
+    'limit_reached' => 'Vous ne pouvez ajouter que jusqu’à 4 diapositives.',
+];
