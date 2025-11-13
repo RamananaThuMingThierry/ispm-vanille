@@ -133,11 +133,13 @@
                     type: 'GET',
                     success: function (data) {
                         $('#show_nom').text(data.nom);
+                        $('#show_raison_sociale').text(data.raison_sociale);
                         $('#show_pays').text(data.pays);
                         $('#show_adresse').text(data.adresse);
                         $('#show_email').text(data.email);
                         $('#show_telephone').text(data.telephone);
                         $('#show_responsable').text(data.responsable);
+                        $('#show_activite').text(data.activite);
                         $('#show_description').text(data.description);
 
                         $('#entrepriseImportatriceShowModal').modal('show');
@@ -165,11 +167,13 @@
                         $('#entreprise_importatrice_id').val(encryptedId);
 
                         $('#nom').val(data.nom);
+                        $('#raison_sociale').val(data.raison_sociale);
                         $('#pays').val(data.pays);
                         $('#adresse').val(data.adresse);
                         $('#email').val(data.email);
                         $('#telephone').val(data.telephone);
                         $('#responsable').val(data.responsable);
+                        $('#activite').val(data.activite);
                         $('#description').val(data.description);
 
                         $('#entrepriseImportatriceForm input, #entrepriseImportatriceForm textarea').prop('disabled', false);

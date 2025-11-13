@@ -13,11 +13,18 @@ class EntrepriseExportatrice extends Model
 
     protected $fillable = [
         'nom',
+        'raison_sociale',
         'pays',
         'adresse',
+        'responsable',
         'email',
         'telephone',
-        'responsable',
+        'activite',
         'description',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 }

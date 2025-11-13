@@ -14,10 +14,23 @@ return new class extends Migration
         Schema::create('marches', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('produit');          // ex : Vanille
-            $table->decimal('prix', 10, 2);     // prix sur le marché
-            $table->integer('disponibilite')->nullable(); // stock / dispo
+
+            $table->foreignId('produit_id')
+                ->constrained('produits')
+                ->cascadeOnUpdate()
+                ->cascadeOnDelete();
+
+            $table->string('marche')->nullable();
+            $table->string('monnaie', 3)->default('MGA');
+            $table->string('source')->nullable();
+
+            $table->decimal('prix', 12, 2);
+            $table->integer('disponibilite')->nullable();
+
             $table->timestamps();
+
+            $table->unique(['date','produit_id','marche']);
+            $table->index(['produit_id','date']);
         });
     }
 

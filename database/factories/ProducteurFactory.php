@@ -19,7 +19,7 @@ class ProducteurFactory extends Factory
             'prenom'    => $this->faker->firstName(),
             'adresse'   => $this->faker->address(),
             'quantite'  => $this->faker->randomFloat(2, 0, 10000),
-            'telephone' => $this->faker->phoneNumber(),
+            'telephone' =>  '+261' . $this->faker->numerify('#########'),
             'email'     => $this->faker->unique()->safeEmail(),
             'fokontany' => $this->faker->word(),
             'commune'   => $this->faker->city(),

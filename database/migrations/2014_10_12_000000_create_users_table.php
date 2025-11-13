@@ -18,12 +18,13 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->enum('status', ['active', 'inactive'])->default('inactive');
             $table->string('avatar')->nullable();
-            $table->string('contact', 10)->nullable();
+            $table->string('contact', 20)->nullable();
             $table->string('address', 255)->nullable();
             $table->enum('role', ['admin', 'user'])->default('user');
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->index(['status','role']);
         });
     }
 

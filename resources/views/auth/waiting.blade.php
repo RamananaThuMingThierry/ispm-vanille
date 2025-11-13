@@ -12,7 +12,7 @@
 
 @section('content')
   @include('backoffice.modal.logout')
-  <section style="background: url('{{ asset(config('public_path.public_path').'utiles/login.jpg') }}') no-repeat center center/cover;">
+  <section style="background: url('{{ asset(config('public_path.public_path').'images/V6.jpg') }}') no-repeat center center/cover;">
     <div class="container d-flex justify-content-center align-items-center min-vh-100">
         <div class="row justify-content-center">
             <div class="col-md-8">

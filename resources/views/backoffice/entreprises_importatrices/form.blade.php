@@ -16,6 +16,11 @@
                     </div>
 
                     <div class="col-md-6">
+                        <label for="raison_sociale" class="form-label">Raison sociale *</label>
+                        <input type="text" name="raison_sociale" id="raison_sociale" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-6">
                         <label for="pays" class="form-label">Pays</label>
                         <input type="text" name="pays" id="pays" class="form-control">
                     </div>
@@ -38,6 +43,11 @@
                     <div class="col-md-6">
                         <label for="responsable" class="form-label">Responsable</label>
                         <input type="text" name="responsable" id="responsable" class="form-control">
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="activite" class="form-label">Activité</label>
+                        <input type="text" name="activite" id="activite" class="form-control">
                     </div>
 
                     <div class="col-12">

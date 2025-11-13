@@ -12,13 +12,15 @@ class EntrepriseExportatriceFactory extends Factory
     public function definition(): array
     {
         return [
-            'nom'         => $this->faker->company(),
-            'pays'        => $this->faker->country(),
-            'adresse'     => $this->faker->address(),
-            'email'       => $this->faker->unique()->companyEmail(),
-            'telephone'   => $this->faker->phoneNumber(),
-            'responsable' => $this->faker->name(),
-            'description' => $this->faker->sentence(10),
+            'nom'            => $this->faker->company(),
+            'raison_sociale' => $this->faker->company() . ' SARL',
+            'pays'           => $this->faker->country(),
+            'adresse'        => $this->faker->address(),
+            'responsable'    => $this->faker->name(),
+            'email'          => $this->faker->unique()->companyEmail(),
+            'telephone'      =>  '+261' . $this->faker->numerify('#########'),
+            'activite'       => $this->faker->sentence(8),
+            'description'    => $this->faker->paragraph(),
         ];
     }
 }

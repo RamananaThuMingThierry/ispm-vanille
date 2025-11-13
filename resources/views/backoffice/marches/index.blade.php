@@ -29,7 +29,7 @@
                         <tr>
                             <th class="text-center">{{ __('form.date') }}</th>
                             <th class="text-center">Produit</th>
-                            <th class="text-center">{{ __('form.price') }}</th>
+                            <th class="text-center">{{ __('form.price') }} (MGA)</th>
                             <th class="text-center">Disponibilité</th>
                             <th class="text-center">{{ __('form.actions') }}</th>
                         </tr>
@@ -58,18 +58,18 @@
             // DataTable
             let table = $('#datatables-marches').DataTable({
                 processing: true,
-                serverSide: true,
-                ajax: '{{ route('admin.marches.index') }}',
+                serverSide: false,
+                ajax: {
+                    url: '{{ route('admin.marches.index') }}',
+                    dataSrc: 'data'
+                },
                 columns: [
                     {
                         data: 'date',
                         name: 'date',
                         className: 'text-center',
-                        render: function (data) {
-                            return data ?? '';
-                        }
                     },
-                    {data: 'produit', name: 'produit', className: 'text-center'},
+                    { data: 'produit', name: 'produit', className: 'text-center'},
                     {
                         data: 'prix',
                         name: 'prix',
@@ -87,7 +87,13 @@
                             return data !== null ? data : '';
                         }
                     },
-                    {data: 'action', name: 'action', orderable: false, searchable: false, className: 'text-center'}
+                    {
+                        data: 'action',
+                        name: 'action',
+                        orderable: false,
+                        searchable: false,
+                        className: 'text-center'
+                    }
                 ],
                 order: [[0, 'desc']]
             });
@@ -113,10 +119,10 @@
                 if (encryptedId === '') {
                     url = '{{ route('admin.marches.store') }}';
                 } else {
-                    url = '{{ route("admin.marches.update", ":id") }}';
-                    url = url.replace(':id', encryptedId);
+                    url = '{{ route("admin.marches.update", ":id") }}'.replace(':id', encryptedId);
                     formData += '&_method=PUT';
                 }
+
 
                 $.ajax({
                     url: url,
@@ -142,49 +148,51 @@
                 });
             });
 
-            // Voir détail
-            $(document).on('click', '#btn-show-marche', function () {
-                let encryptedId = $(this).data('id');
-                let url = '{{ route("admin.marches.show", ":id") }}'.replace(':id', encryptedId);
+// Voir détail
+$(document).on('click', '#btn-show-marche', function () {
+    let id = $(this).data('id');
+    let url = '{{ route("admin.marches.show", ":id") }}'.replace(':id', id);
 
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    success: function (data) {
-                        $('#show_date').text(data.date);
-                        $('#show_produit').text(data.produit);
-                        $('#show_prix').text(parseFloat(data.prix).toFixed(2));
-                        $('#show_disponibilite').text(data.disponibilite ?? '');
-                        $('#marcheShowModal').modal('show');
-                    },
-                    error: function (xhr) {
-                        if (xhr.status === 404) {
-                            toastr.error('Marché introuvable.');
-                        } else {
-                            toastr.error('Impossible de charger le marché.');
-                        }
-                    }
-                });
-            });
+    $.ajax({
+        url: url,
+        type: 'GET',
+        success: function (data) {
+            $('#show_date').text(data.date_formatted || '');
+            $('#show_produit').text(data.produit || '');
+            $('#show_prix').text(data.prix_formatted || '');
+            $('#show_disponibilite').text(data.disponibilite ?? '');
+            $('#marcheShowModal').modal('show');
+        },
+        error: function (xhr) {
+            if (xhr.status === 404) {
+                toastr.error('Marché introuvable.');
+            } else {
+                toastr.error('Impossible de charger le marché.');
+            }
+        }
+    });
+});
+
 
             // Éditer
             $(document).on('click', '#btn-edit-marche', function () {
-                let encryptedId = $(this).data('id');
-                let url = '{{ route("admin.marches.show", ":id") }}'.replace(':id', encryptedId);
+                let id = $(this).data('id');
+                let url = '{{ route("admin.marches.show", ":id") }}'.replace(':id', id);
 
                 $.ajax({
                     url: url,
                     type: 'GET',
                     success: function (data) {
                         $('#marcheModalLabel').text('Modifier le marché');
-                        $('#marche_id').val(encryptedId);
+                        $('#marche_id').val(id);
 
+                        // data.date = 'YYYY-MM-DD'
                         $('#date').val(data.date);
-                        $('#produit').val(data.produit);
-                        $('#prix').val(data.prix);
+                        $('#produit_id').val(data.produit_id); // SELECT
+                        $('#prix').val(data.prix); // valeur numérique
                         $('#disponibilite').val(data.disponibilite);
 
-                        $('#marcheForm input').prop('disabled', false);
+                        $('#marcheForm input, #marcheForm select').prop('disabled', false);
                         $('#btn-save-marche').show();
                         $('#marcheModal').modal('show');
                     },
@@ -197,6 +205,7 @@
                     }
                 });
             });
+
 
             // Supprimer
             $(document).on('click', '#btn-delete-marche-confirm', function () {

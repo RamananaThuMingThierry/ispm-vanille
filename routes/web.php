@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\FluxCommercial;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AUTH\LoginController;
 use App\Http\Controllers\ADMIN\BadgeController;
@@ -7,20 +8,23 @@ use App\Http\Controllers\ADMIN\UsersController;
 use App\Http\Controllers\ADMIN\MarcheController;
 use App\Http\Controllers\AUTH\LanguesController;
 use App\Http\Controllers\AUTH\WaitingController;
+use App\Http\Controllers\ADMIN\AnnonceController;
+use App\Http\Controllers\ADMIN\ProduitController;
 use App\Http\Controllers\ADMIN\ProfileController;
 use App\Http\Controllers\AUTH\RegisterController;
+use App\Http\Controllers\FRONT\ContactController;
+
 use App\Http\Controllers\ADMIN\ActualiteController;
 use App\Http\Controllers\ADMIN\DashboardController;
 use App\Http\Controllers\ADMIN\ProducteurController;
-
-
 use App\Http\Controllers\FRONT\FrontMarcheController;
 use App\Http\Controllers\FRONT\FrontofficeController;
 use App\Http\Controllers\AUTH\ResetPasswordController;
+
 use App\Http\Controllers\AUTH\ForgetPasswordController;
+use App\Http\Controllers\ADMIN\FluxCommercialController;
 use App\Http\Controllers\FRONT\FrontActualiteController;
 use App\Http\Controllers\FRONT\FrontEntrepriseController;
-
 use App\Http\Controllers\FRONT\FrontProducteurController;
 use App\Http\Controllers\ADMIN\EntrepriseExportatriceController;
 use App\Http\Controllers\ADMIN\EntrepriseImportatriceController;
@@ -51,6 +55,7 @@ Route::middleware('auth')->group(function(){
 
 Route::get('/', FrontofficeController::class)->name('frontoffice');
 
+Route::post('/contact/send', [ContactController::class, 'send'])->name('contact.send');
 Route::view('/marche', 'frontoffice.marche.index')->name('front.marche.index');
 Route::get('/marche', [FrontMarcheController::class, 'index'])->name('front.marche.index');
 Route::get('/producteurs', [FrontProducteurController::class, 'index'])->name('front.producteurs.index');
@@ -64,6 +69,11 @@ Route::prefix('backoffice')->name('admin.')->middleware(['auth','check.status'])
     Route::get('/badge',[BadgeController::class, 'getAll'])->name('badge');
     Route::resource('producteurs', ProducteurController::class);
     Route::resource('marches', MarcheController::class);
+    Route::resource('annonces', AnnonceController::class);
+Route::resource('flux_commerciaux', FluxCommercialController::class)
+    ->except(['create', 'edit']);
+
+    Route::resource('produits', ProduitController::class);
     Route::resource('actualites', ActualiteController::class);
     Route::resource('entreprises_exportatrices', EntrepriseExportatriceController::class);
     Route::resource('entreprises_importatrices', EntrepriseImportatriceController::class);

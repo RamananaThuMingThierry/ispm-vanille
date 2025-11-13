@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'filter' => "Filter",
+    'reset'  => "Reset",
+    'value'  => "Value",
+    'choose' => "Choose",
     'details' => "Details",
     'close' => "Close",
     'firstname' => "Firstname",

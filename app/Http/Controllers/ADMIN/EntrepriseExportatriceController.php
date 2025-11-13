@@ -19,27 +19,23 @@ class EntrepriseExportatriceController extends Controller
     {
         try {
             if ($request->ajax()) {
-                $data = EntrepriseExportatrice::latest()->get();
+                $query = EntrepriseExportatrice::query()->latest();
 
-                $data->map(function ($item) {
-                    $item->encrypted_id = Crypt::encryptString($item->id);
-                    unset($item->id);
-                    return $item;
-                });
-
-                return DataTables::of($data)
+                return DataTables::of($query)
                     ->addColumn('action', function ($row) {
+                        $encryptedId = Crypt::encryptString($row->id);
+
                         return '
                             <button type="button" class="btn btn-outline-warning btn-sm me-1 btn-show-entreprise"
-                                data-id="'.$row->encrypted_id.'" title="'.__('form.seen').'">
+                                data-id="'.$encryptedId.'" title="'.__('form.seen').'">
                                 <i class="fa fa-eye"></i>
                             </button>
                             <button type="button" class="btn btn-outline-primary btn-sm me-1 btn-edit-entreprise"
-                                data-id="'.$row->encrypted_id.'" title="'.__('form.edit').'">
+                                data-id="'.$encryptedId.'" title="'.__('form.edit').'">
                                 <i class="fa fa-edit"></i>
                             </button>
                             <button type="button" class="btn btn-outline-danger btn-sm btn-delete-entreprise-confirm"
-                                data-id="'.$row->encrypted_id.'" title="'.__('form.delete').'">
+                                data-id="'.$encryptedId.'" title="'.__('form.delete').'">
                                 <i class="fa fa-trash"></i>
                             </button>
                         ';
@@ -68,6 +64,8 @@ class EntrepriseExportatriceController extends Controller
         try {
             $entreprise = EntrepriseExportatrice::create($request->validated());
 
+            $entreprise->encrypted_id = Crypt::encryptString($entreprise->id);
+
             return response()->json([
                 'status'  => true,
                 'message' => 'Entreprise exportatrice créée avec succès.',
@@ -86,8 +84,10 @@ class EntrepriseExportatriceController extends Controller
     public function show(string $id): JsonResponse
     {
         try {
-            $realId    = Crypt::decryptString($id);
+            $realId     = Crypt::decryptString($id);
             $entreprise = EntrepriseExportatrice::findOrFail($realId);
+
+            $entreprise->encrypted_id = $id;
 
             return response()->json($entreprise, 200);
         } catch (DecryptException $e) {
@@ -95,14 +95,18 @@ class EntrepriseExportatriceController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['status' => false, 'message' => 'Entreprise exportatrice introuvable.'], 404);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Erreur lors du chargement.', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Erreur lors du chargement.',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 
     public function update(EntrepriseExportatriceRequest $request, string $id): JsonResponse
     {
         try {
-            $realId    = Crypt::decryptString($id);
+            $realId     = Crypt::decryptString($id);
             $entreprise = EntrepriseExportatrice::findOrFail($realId);
 
             $entreprise->update($request->validated());
@@ -111,19 +115,24 @@ class EntrepriseExportatriceController extends Controller
                 'status'  => true,
                 'message' => 'Entreprise exportatrice mise à jour avec succès.',
             ]);
+
         } catch (DecryptException $e) {
             return response()->json(['status' => false, 'message' => 'Identifiant invalide.'], 400);
         } catch (ModelNotFoundException $e) {
             return response()->json(['status' => false, 'message' => 'Entreprise exportatrice introuvable.'], 404);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Erreur lors de la mise à jour.', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Erreur lors de la mise à jour.',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 
     public function destroy(string $id): JsonResponse
     {
         try {
-            $realId    = Crypt::decryptString($id);
+            $realId     = Crypt::decryptString($id);
             $entreprise = EntrepriseExportatrice::findOrFail($realId);
 
             $entreprise->delete();
@@ -132,12 +141,17 @@ class EntrepriseExportatriceController extends Controller
                 'status'  => true,
                 'message' => 'Entreprise exportatrice supprimée avec succès.',
             ]);
+
         } catch (DecryptException $e) {
             return response()->json(['status' => false, 'message' => 'Identifiant invalide.'], 400);
         } catch (ModelNotFoundException $e) {
             return response()->json(['status' => false, 'message' => 'Entreprise exportatrice introuvable.'], 404);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Erreur lors de la suppression.', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Erreur lors de la suppression.',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 }

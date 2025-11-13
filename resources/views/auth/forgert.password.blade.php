@@ -11,7 +11,7 @@
           }
       }
     </style>
-@endpush 
+@endpush
 
 @section('content')
   <div class="container">
@@ -68,7 +68,7 @@
                 // Change the button content to show the spinner
                 button.html(loadingContent);
                 button.prop('disabled', true);
-                
+
                 $.ajax({
                     url: "{{ route('password.email') }}",
                     method: 'POST',

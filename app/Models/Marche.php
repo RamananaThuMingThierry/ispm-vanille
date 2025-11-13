@@ -2,22 +2,35 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Produit;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Marche extends Model
 {
     use HasFactory;
 
+    protected $table = 'marches';
+
     protected $fillable = [
         'date',
-        'produit',
+        'produit_id',
+        'marche',
+        'monnaie',
+        'source',
         'prix',
         'disponibilite',
     ];
 
     protected $casts = [
-        'date' => 'date',
-        'prix' => 'decimal:2',
+        'date'          => 'date',
+        'prix'          => 'decimal:2',
+        'disponibilite' => 'integer',
     ];
+
+    public function produit()
+    {
+        return $this->belongsTo(Produit::class);
+    }
 }
+

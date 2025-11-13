@@ -16,8 +16,13 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label for="produit" class="form-label">Produit *</label>
-                        <input type="text" name="produit" id="produit" class="form-control" required>
+                        <label for="produit_id" class="form-label">Produit *</label>
+                        <select name="produit_id" id="produit_id" class="form-select" required>
+                            <option value="">{{ __('form.choose') ?? 'Choisir…' }}</option>
+                            @foreach($produits as $produit)
+                                <option value="{{ $produit->id }}">{{ $produit->nom }}</option>
+                            @endforeach
+                        </select>
                     </div>
 
                     <div class="col-md-6">

@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('nom');
             $table->string('prenom')->nullable();
             $table->string('adresse')->nullable();
-            $table->decimal('quantite', 10, 2)->nullable(); // par ex. en kg
-            $table->string('telephone')->nullable();
+            $table->decimal('quantite', 10, 2)->nullable();
+            $table->string('telephone', 20)->nullable();
             $table->string('email')->nullable();
             $table->string('fokontany')->nullable();
             $table->string('commune')->nullable();

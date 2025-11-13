@@ -14,13 +14,20 @@ return new class extends Migration
         Schema::create('entreprise_exportatrices', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
+            $table->string('raison_sociale');
             $table->string('pays')->nullable();
-            $table->string('email')->nullable();
             $table->string('adresse')->nullable();
             $table->string('responsable')->nullable();
+            $table->string('email')->nullable();
+            $table->string('telephone', 20)->nullable();
+            $table->text('activite')->nullable();
             $table->text('description')->nullable();
-            $table->string('telephone')->nullable();
             $table->timestamps();
+
+            // Index utiles
+            $table->index(['nom']);
+            $table->index(['raison_sociale']);
+            $table->index(['pays']);
         });
     }
 

@@ -14,13 +14,15 @@ class EntrepriseExportatriceRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nom'         => ['required', 'string', 'max:255'],
-            'pays'        => ['nullable', 'string', 'max:255'],
-            'adresse'     => ['nullable', 'string', 'max:255'],
-            'email'       => ['nullable', 'email', 'max:255'],
-            'telephone'   => ['nullable', 'string', 'max:20'],
-            'responsable' => ['nullable', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'nom'             => ['required', 'string', 'max:255'],
+            'raison_sociale'  => ['required', 'string', 'max:255'],
+            'pays'            => ['nullable', 'string', 'max:255'],
+            'adresse'         => ['nullable', 'string', 'max:255'],
+            'responsable'     => ['nullable', 'string', 'max:255'],
+            'email'           => ['nullable', 'email:rfc', 'max:255'],
+            'telephone'       => ['nullable', 'string', 'max:30'],
+            'activite'        => ['nullable', 'string'],
+            'description'     => ['nullable', 'string'],
         ];
     }
 }

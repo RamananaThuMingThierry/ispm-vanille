@@ -3,13 +3,51 @@
 @section('titre', __('title.dashboard'))
 
 @section('content')
-    <div class="row pt-2">
+    <div class="row pt-2 mb-3">
         <div class="col-12 d-flex align-items-center justify-content-between">
             <h2 class="text-primary">@yield('titre')</h2>
         </div>
     </div>
 
-    <div class="row">
+    {{-- Filtres année / mois --}}
+    <form method="GET" class="row g-2 align-items-end mb-3">
+        <div class="col-md-4">
+            <label for="year" class="form-label">{{ __('dashboard.year') ?? 'Année' }}</label>
+            <select name="year" id="year" class="form-select">
+                @foreach($years as $year)
+                    <option value="{{ $year }}" {{ (int)$selectedYear === (int)$year ? 'selected' : '' }}>
+                        {{ $year }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <label for="month" class="form-label">{{ __('dashboard.month') ?? 'Mois' }}</label>
+            <select name="month" id="month" class="form-select">
+                <option value="">{{ __('dashboard.all_months') ?? 'Tous les mois' }}</option>
+                @foreach($months as $num => $label)
+                    <option value="{{ $num }}" {{ (int)$selectedMonth === (int)$num ? 'selected' : '' }}>
+                        {{ ucfirst($label) }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fa fa-filter"></i> {{ __('form.filter') ?? 'Filtrer' }}
+            </button>
+            @if(request()->hasAny(['year','month']))
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-outline-secondary ms-1">
+                    {{ __('form.reset') ?? 'Réinitialiser' }}
+                </a>
+            @endif
+        </div>
+    </form>
+
+    {{-- Cartes de synthèse --}}
+    <div class="row g-3 mb-3">
         <div class="col">
             <div class="card text-white bg-primary shadow-sm">
                 <div class="card-body">
@@ -66,19 +104,51 @@
         </div>
     </div>
 
-    <div class="row my-2">
-        <div class="col-12">
-            <div class="card shadow-none" style="height: 500px;">
-                <canvas id="reservationsChart" height="500"></canvas>
+    {{-- Graphiques --}}
+    <div class="row mb-3">
+        <div class="col-md-8 mb-3 mb-md-0">
+            <div class="card shadow-sm" style="height: 450px;">
+                <div class="card-header py-2">
+                    <strong>
+                        @if($chartMode === 'months')
+                            {{ __('dashboard.marches_par_mois') ?? 'Entrées marchés par mois' }}
+                            ({{ $selectedYear }})
+                        @else
+                            {{ __('dashboard.marches_par_jour') ?? 'Entrées marchés par jour' }}
+                            – {{ ucfirst($months[$selectedMonth]) }} {{ $selectedYear }}
+                        @endif
+                    </strong>
+                </div>
+                <div class="card-body p-2">
+                    <canvas id="marchesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm" style="height: 450px;">
+                <div class="card-header py-2">
+                    <strong>{{ __('dashboard.offres_demandes') ?? 'Offres vs Demandes' }}</strong>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center p-4">
+                    <canvas id="annoncesChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 
+    {{-- Dernières entrées de marché --}}
     <div class="row mb-2">
        <div class="col-12">
             <div class="card shadow-sm p-0">
                 <div class="card-body">
-                    <h5 class="mb-3">{{ __('dashboard.dernieres_entrees_marches') ?? 'Dernières entrées de marché' }}</h5>
+                    <h5 class="mb-3">
+                        {{ __('dashboard.dernieres_entrees_marches') ?? 'Dernières entrées de marché' }}
+                        ({{ $selectedYear }})
+                        @if($selectedMonth)
+                            – {{ ucfirst($months[$selectedMonth]) }}
+                        @endif
+                    </h5>
                     <div class="table-responsive">
                         <table class="table table-sm mt-2">
                             <thead class="table-light">
@@ -93,10 +163,8 @@
                                 @forelse($lastMarches as $m)
                                     <tr>
                                         <td>{{ \Carbon\Carbon::parse($m->date)->locale('fr')->translatedFormat('d F Y') }}</td>
-                                        <td>{{ $m->produit }}</td>
-                                        <td>
-                                            {{ number_format($m->prix, 2, ',', ' ') }}
-                                        </td>
+                                        <td>{{ optional($m->produit)->nom ?? '—' }}</td>
+                                        <td>{{ number_format($m->prix, 2, ',', ' ') }}</td>
                                         <td>{{ $m->disponibilite ?? '—' }}</td>
                                     </tr>
                                 @empty
@@ -116,29 +184,79 @@
 @push('scripts')
 <script src="{{ asset(config('public_path.public_path').'vendor/chart/js/chart.min.js') }}"></script>
 <script>
-    const ctx = document.getElementById('reservationsChart').getContext('2d');
-    const reservationsChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: {!! $labels !!},
-            datasets: [{
-                label: "{{ __('dashboard.marches_par_mois') ?? 'Entrées marchés par mois' }}",
-                data: {!! $data !!},
-                backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                borderColor: 'rgb(54, 162, 235)',
-                borderWidth: 1,
-                borderRadius: 5,
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 1 }
+    // Données envoyées par le contrôleur
+    const marchesLabels   = @json($labels);
+    const marchesData     = @json($data);
+    const chartMode       = @json($chartMode);
+    const annoncesLabels  = @json($annonceLabels);
+    const annoncesData    = @json($annonceData);
+
+
+    // === Graphique barres : marchés (par mois OU par jour) ===
+    const marchesCanvas = document.getElementById('marchesChart');
+    if (marchesCanvas) {
+        const marchesCtx = marchesCanvas.getContext('2d');
+
+        const marchesChart = new Chart(marchesCtx, {
+            type: 'bar',
+            data: {
+                labels: marchesLabels,
+                datasets: [{
+                    label: chartMode === 'months'
+                        ? "{{ __('dashboard.marches_par_mois') ?? 'Entrées marchés par mois' }}"
+                        : "{{ __('dashboard.marches_par_jour') ?? 'Entrées marchés par jour' }}",
+                    data: marchesData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1,
+                    borderRadius: 4,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false, // s'adapte à la hauteur de la card
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: { stepSize: 1 }
+                    }
                 }
             }
-        }
-    });
+        });
+    }
+
+    // === Graphique en cercle : Offres vs Demandes ===
+    const annoncesCanvas = document.getElementById('annoncesChart');
+    if (annoncesCanvas) {
+        const annoncesCtx = annoncesCanvas.getContext('2d');
+
+        const annoncesChart = new Chart(annoncesCtx, {
+            type: 'doughnut',
+            data: {
+                labels: annoncesLabels,
+                datasets: [{
+                    data: annoncesData,
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.7)',   // Offres
+                        'rgba(255, 99, 132, 0.7)',   // Demandes
+                    ],
+                    borderColor: [
+                        'rgb(75, 192, 192)',
+                        'rgb(255, 99, 132)',
+                    ],
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    }
 </script>
 @endpush

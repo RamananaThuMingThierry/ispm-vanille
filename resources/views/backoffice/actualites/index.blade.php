@@ -49,21 +49,17 @@
     <script src="{{ asset('vendor/datatable/js/datatable.min.js') }}"></script>
 
     <script type="text/javascript">
-        // --- utils réutilisables ---
         function resetImageInputAndPreview() {
             const $input = $('#image');
-            // vider le champ fichier (tous navigateurs)
             $input.val('');
             if ($input.get(0)) $input.get(0).value = null;
 
-            // révoquer un éventuel blob précédent
             const oldBlob = $('#image-preview').data('blob-url');
             if (oldBlob) {
                 URL.revokeObjectURL(oldBlob);
                 $('#image-preview').removeData('blob-url');
             }
 
-            // cacher l’aperçu
             $('#image-preview-container').hide();
             $('#image-preview').attr('src', '');
         }
@@ -75,10 +71,8 @@
                 }
             });
 
-            // Aperçu live dès qu’on choisit un nouveau fichier
             $('#image').on('change', function () {
                 const file = this.files && this.files[0];
-                // révoquer le blob précédent si besoin
                 const oldBlob = $('#image-preview').data('blob-url');
                 if (oldBlob) {
                     URL.revokeObjectURL(oldBlob);
@@ -95,7 +89,6 @@
                 }
             });
 
-            // Nettoyer à la fermeture de la modale
             $('#actualiteModal').on('hidden.bs.modal', function () {
                 resetImageInputAndPreview();
             });
@@ -127,10 +120,9 @@
                         name: 'ala_une',
                         className: 'text-center',
                         render: function (data) {
-                            if (data) {
-                                return '<span class="badge bg-success">Oui</span>';
-                            }
-                            return '<span class="badge bg-secondary">Non</span>';
+                            return data
+                                ? '<span class="badge bg-success">Oui</span>'
+                                : '<span class="badge bg-secondary">Non</span>';
                         }
                     },
                     {
@@ -167,19 +159,19 @@
                 $('#actualiteModal').modal('show');
             });
 
-            // Submit (create / update) avec FormData
+            // Submit (create / update)
             $('#actualiteForm').on('submit', function (e) {
                 e.preventDefault();
 
-                let encryptedId = $('#actualite_id').val();
+                let id = $('#actualite_id').val();
                 let form = document.getElementById('actualiteForm');
                 let formData = new FormData(form);
                 let url;
 
-                if (encryptedId === '') {
+                if (id === '') {
                     url = '{{ route('admin.actualites.store') }}';
                 } else {
-                    url = '{{ route("admin.actualites.update", ":id") }}'.replace(':id', encryptedId);
+                    url = '{{ route("admin.actualites.update", ":id") }}'.replace(':id', id);
                     formData.append('_method', 'PUT');
                 }
 
@@ -211,10 +203,10 @@
                 });
             });
 
-            // Show détail
+            // Show
             $(document).on('click', '#btn-show-actualite', function () {
-                let encryptedId = $(this).data('id');
-                let url = '{{ route("admin.actualites.show", ":id") }}'.replace(':id', encryptedId);
+                let id = $(this).data('id');
+                let url = '{{ route("admin.actualites.show", ":id") }}'.replace(':id', id);
 
                 $.get(url, function (data) {
                     $('#show_titre').text(data.titre);
@@ -236,22 +228,20 @@
 
             // Edit
             $(document).on('click', '#btn-edit-actualite', function () {
-                let encryptedId = $(this).data('id');
-                let url = '{{ route("admin.actualites.show", ":id") }}'.replace(':id', encryptedId);
+                let id = $(this).data('id');
+                let url = '{{ route("admin.actualites.show", ":id") }}'.replace(':id', id);
 
-                // on repart d'une base propre
                 resetImageInputAndPreview();
 
                 $.get(url, function (data) {
                     $('#actualiteModalLabel').text('Modifier l’actualité');
-                    $('#actualite_id').val(encryptedId);
+                    $('#actualite_id').val(id);
 
                     $('#titre').val(data.titre);
                     $('#contenu').val(data.contenu);
                     $('#ala_une').prop('checked', !!data.ala_une);
 
                     if (data.image) {
-                        // Anti-cache : on force le refresh de l’image
                         let base = '{{ asset(config('public_path.public_path').'images/actualites') }}/' + data.image;
                         let bust = base + '?v=' + Date.now();
                         $('#image-preview').attr('src', bust);
@@ -261,7 +251,6 @@
                         $('#image-preview').attr('src', '');
                     }
 
-                    // IMPORTANT: le champ fichier reste vide tant que l'utilisateur ne choisit rien
                     const input = document.getElementById('image');
                     if (input) input.value = null;
 
@@ -275,7 +264,7 @@
 
             // Delete
             $(document).on('click', '#btn-delete-actualite-confirm', function () {
-                let encryptedId = $(this).data('id');
+                let id = $(this).data('id');
 
                 Swal.fire({
                     title: '{{ __("form.delete_confirm") }}',
@@ -286,7 +275,7 @@
                     cancelButtonText: '{{ __("form.no") }}'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        let url = '{{ route("admin.actualites.destroy", ":id") }}'.replace(':id', encryptedId);
+                        let url = '{{ route("admin.actualites.destroy", ":id") }}'.replace(':id', id);
 
                         $.ajax({
                             url: url,

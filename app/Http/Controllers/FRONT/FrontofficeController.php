@@ -15,12 +15,26 @@ class FrontofficeController extends Controller
     {
         // Slides hero (statique ou DB)
         $slides = [
-            ['image' => asset(config('public_path.public_path').'images/V6.jpg'), 'title' => 'Des marchés plus lisibles', 'subtitle' => 'Suivez les prix et disponibilités en temps réel.', 'badge' => 'Transparence'],
-            ['image' => asset(config('public_path.public_path').'images/V7.jpg'), 'title' => 'Reliez l’offre et la demande', 'subtitle' => 'Mettez en relation producteurs et entreprises.', 'badge' => 'Connexion'],
+            [
+                'image'    => asset(config('public_path.public_path').'images/V6.jpg'),
+                'title'    => 'Des marchés plus lisibles',
+                'subtitle' => 'Suivez les prix et disponibilités en temps réel.',
+                'badge'    => 'Transparence',
+            ],
+            [
+                'image'    => asset(config('public_path.public_path').'images/V7.jpg'),
+                'title'    => 'Reliez l’offre et la demande',
+                'subtitle' => 'Mettez en relation producteurs et entreprises.',
+                'badge'    => 'Connexion',
+            ],
         ];
 
         // Listes
-        $marches       = Marche::orderByDesc('date')->limit(6)->get();
+        $marches       = Marche::with('produit:id,nom,unite')
+                            ->orderByDesc('date')
+                            ->limit(6)
+                            ->get();
+
         $producteurs   = Producteur::latest()->limit(6)->get();
         $exportatrices = EntrepriseExportatrice::latest()->limit(3)->get();
         $importatrices = EntrepriseImportatrice::latest()->limit(3)->get();
@@ -34,7 +48,13 @@ class FrontofficeController extends Controller
         ];
 
         return view('frontoffice.index', compact(
-            'slides','marches','producteurs','exportatrices','importatrices','actualites','metrics'
+            'slides',
+            'marches',
+            'producteurs',
+            'exportatrices',
+            'importatrices',
+            'actualites',
+            'metrics'
         ));
     }
 }

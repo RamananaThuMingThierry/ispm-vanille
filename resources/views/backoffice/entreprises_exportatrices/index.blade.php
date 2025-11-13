@@ -162,19 +162,20 @@
             // Voir détail
             $(document).on('click', '.btn-show-entreprise', function() {
                 const encryptedId = $(this).data('id');
-                let url = '{{ route('admin.entreprises_exportatrices.show', ':id') }}'.replace(':id',
-                    encryptedId);
+                let url = '{{ route('admin.entreprises_exportatrices.show', ':id') }}'.replace(':id', encryptedId);
 
                 $.ajax({
                     url,
                     type: 'GET',
                     success: function(data) {
                         $('#show_nom').text(data.nom ?? '');
+                        $('#show_raison_sociale').text(data.raison_sociale ?? '');
                         $('#show_pays').text(data.pays ?? '');
                         $('#show_adresse').text(data.adresse ?? '');
                         $('#show_email').text(data.email ?? '');
                         $('#show_telephone').text(data.telephone ?? '');
                         $('#show_responsable').text(data.responsable ?? '');
+                        $('#show_activite').text(data.activite ?? '');
                         $('#show_description').text(data.description ?? '');
                         $('#entrepriseShowModal').modal('show');
                     },
@@ -185,11 +186,11 @@
                 });
             });
 
+
             // Éditer (pré-remplir)
             $(document).on('click', '.btn-edit-entreprise', function() {
                 const encryptedId = $(this).data('id');
-                let url = '{{ route('admin.entreprises_exportatrices.show', ':id') }}'.replace(':id',
-                    encryptedId);
+                let url = '{{ route('admin.entreprises_exportatrices.show', ':id') }}'.replace(':id', encryptedId);
 
                 $.ajax({
                     url,
@@ -199,15 +200,16 @@
                         $('#entreprise_id').val(encryptedId);
 
                         $('#nom').val(data.nom ?? '');
+                        $('#raison_sociale').val(data.raison_sociale ?? '');
                         $('#pays').val(data.pays ?? '');
                         $('#adresse').val(data.adresse ?? '');
                         $('#email').val(data.email ?? '');
                         $('#telephone').val(data.telephone ?? '');
                         $('#responsable').val(data.responsable ?? '');
+                        $('#activite').val(data.activite ?? '');
                         $('#description').val(data.description ?? '');
 
-                        $('#entrepriseForm input, #entrepriseForm textarea').prop('disabled',
-                            false);
+                        $('#entrepriseForm input, #entrepriseForm textarea').prop('disabled', false);
                         $('#btn-save-entreprise').show();
                         $('#entrepriseModal').modal('show');
                     },

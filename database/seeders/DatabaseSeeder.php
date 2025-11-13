@@ -4,9 +4,10 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Database\Seeders\MarcheSeeder;
+use Database\Seeders\ProduitSeeder;
 use Database\Seeders\ActualiteSeeder;
-use App\Models\EntrepriseExportatrice;
 use Database\Seeders\ProducteurSeeder;
+use Database\Seeders\EntrepriseExportatriceSeeder;
 use Database\Seeders\EntrepriseImportatriceSeeder;
 
 class DatabaseSeeder extends Seeder
@@ -15,6 +16,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             ProducteurSeeder::class,
+            ProduitSeeder::class,
             MarcheSeeder::class,
             EntrepriseExportatriceSeeder::class,
             EntrepriseImportatriceSeeder::class,

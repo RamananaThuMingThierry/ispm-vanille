@@ -14,10 +14,14 @@ class MarcheRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'date'          => ['required', 'date'],
-            'produit'       => ['required', 'string', 'max:255'],
-            'prix'          => ['required', 'numeric', 'min:0'],
-            'disponibilite' => ['nullable', 'integer', 'min:0'],
+            'date'           => ['required', 'date'],
+            'produit_id'     => ['required', 'exists:produits,id'],
+            'marche'         => ['nullable', 'string', 'max:255'],
+            'monnaie'        => ['nullable', 'string', 'size:3'],
+            'source'         => ['nullable', 'string', 'max:255'],
+            'prix'           => ['required', 'numeric', 'min:0'],
+            'disponibilite'  => ['nullable', 'integer', 'min:0'],
         ];
     }
+
 }

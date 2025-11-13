@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'offres_demandes' => "Offres & Demandes",
+    'year' => "Year",
+    'all_months' => "All months",
     'producteurs' => 'Producers',
     'exportatrices' => 'Export Companies',
     'importatrices' => 'Import Companies',

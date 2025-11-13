@@ -3,7 +3,7 @@
 @section('titre', __('register.register'))
 
 @section('content')
-    <section id="login-register" class="vh-100" style="background: url('{{ asset(config('public_path.public_path').'utiles/login.jpg') }}') no-repeat center center/cover;">
+    <section id="login-register" class="vh-100" style="background: url('{{ asset(config('public_path.public_path').'images/V6.jpg') }}') no-repeat center center/cover;">
         <div class="container h-100">
             <div class="row d-flex justify-content-center align-items-center h-100">
                 <div class="col col-md-8">

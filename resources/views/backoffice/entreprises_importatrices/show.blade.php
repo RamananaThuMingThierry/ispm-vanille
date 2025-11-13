@@ -12,6 +12,9 @@
                     <dt class="col-sm-3">{{ __('form.name') }}</dt>
                     <dd class="col-sm-9" id="show_nom"></dd>
 
+                    <dt class="col-sm-3">Raison sociale</dt>
+                    <dd class="col-sm-9" id="show_raison_sociale"></dd>
+
                     <dt class="col-sm-3">Pays</dt>
                     <dd class="col-sm-9" id="show_pays"></dd>
 
@@ -26,6 +29,9 @@
 
                     <dt class="col-sm-3">Responsable</dt>
                     <dd class="col-sm-9" id="show_responsable"></dd>
+
+                    <dt class="col-sm-3">Activité</dt>
+                    <dd class="col-sm-9" id="show_activite"></dd>
 
                     <dt class="col-sm-3">{{ __('form.description') }}</dt>
                     <dd class="col-sm-9" id="show_description"></dd>

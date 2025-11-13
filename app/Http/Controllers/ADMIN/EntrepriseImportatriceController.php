@@ -19,27 +19,23 @@ class EntrepriseImportatriceController extends Controller
     {
         try {
             if ($request->ajax()) {
-                $data = EntrepriseImportatrice::latest()->get();
+                $query = EntrepriseImportatrice::query()->latest();
 
-                $data->map(function ($item) {
-                    $item->encrypted_id = Crypt::encryptString($item->id);
-                    unset($item->id);
-                    return $item;
-                });
-
-                return DataTables::of($data)
+                return DataTables::of($query)
                     ->addColumn('action', function ($row) {
+                        $encryptedId = Crypt::encryptString($row->id);
+
                         return '
                             <button type="button" class="btn btn-outline-primary btn-sm me-1"
-                                id="btn-show-entreprise-importatrice" data-id="' . $row->encrypted_id . '">
+                                id="btn-show-entreprise-importatrice" data-id="' . $encryptedId . '">
                                 <i class="fa fa-eye"></i>
                             </button>
                             <button type="button" class="btn btn-outline-success btn-sm me-1"
-                                id="btn-edit-entreprise-importatrice" data-id="' . $row->encrypted_id . '">
+                                id="btn-edit-entreprise-importatrice" data-id="' . $encryptedId . '">
                                 <i class="fa fa-edit"></i>
                             </button>
                             <button type="button" class="btn btn-outline-danger btn-sm"
-                                id="btn-delete-entreprise-importatrice-confirm" data-id="' . $row->encrypted_id . '">
+                                id="btn-delete-entreprise-importatrice-confirm" data-id="' . $encryptedId . '">
                                 <i class="fa fa-trash"></i>
                             </button>';
                     })
@@ -52,9 +48,9 @@ class EntrepriseImportatriceController extends Controller
         } catch (Exception $e) {
             if ($request->ajax()) {
                 return response()->json([
-                    'status' => false,
+                    'status'  => false,
                     'message' => 'Erreur lors du chargement des entreprises importatrices.',
-                    'error' => $e->getMessage(),
+                    'error'   => $e->getMessage(),
                 ], 500);
             }
 
@@ -66,6 +62,7 @@ class EntrepriseImportatriceController extends Controller
     {
         try {
             $entreprise = EntrepriseImportatrice::create($request->validated());
+            $entreprise->encrypted_id = Crypt::encryptString($entreprise->id);
 
             return response()->json([
                 'status'  => true,
@@ -82,11 +79,12 @@ class EntrepriseImportatriceController extends Controller
         }
     }
 
-    public function show(string $id): JsonResponse
+    public function show(string $encryptedId): JsonResponse
     {
         try {
-            $realId = Crypt::decryptString($id);
+            $realId     = Crypt::decryptString($encryptedId);
             $entreprise = EntrepriseImportatrice::findOrFail($realId);
+            $entreprise->encrypted_id = $encryptedId;
 
             return response()->json($entreprise, 200);
 
@@ -95,14 +93,18 @@ class EntrepriseImportatriceController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['status' => false, 'message' => 'Entreprise importatrice introuvable.'], 404);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Erreur lors du chargement.', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Erreur lors du chargement.',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 
-    public function update(EntrepriseImportatriceRequest $request, string $id): JsonResponse
+    public function update(EntrepriseImportatriceRequest $request, string $encryptedId): JsonResponse
     {
         try {
-            $realId = Crypt::decryptString($id);
+            $realId     = Crypt::decryptString($encryptedId);
             $entreprise = EntrepriseImportatrice::findOrFail($realId);
 
             $entreprise->update($request->validated());
@@ -117,14 +119,18 @@ class EntrepriseImportatriceController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['status' => false, 'message' => 'Entreprise importatrice introuvable.'], 404);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Erreur lors de la mise à jour.', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Erreur lors de la mise à jour.',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 
-    public function destroy(string $id): JsonResponse
+    public function destroy(string $encryptedId): JsonResponse
     {
         try {
-            $realId = Crypt::decryptString($id);
+            $realId     = Crypt::decryptString($encryptedId);
             $entreprise = EntrepriseImportatrice::findOrFail($realId);
 
             $entreprise->delete();
@@ -139,7 +145,11 @@ class EntrepriseImportatriceController extends Controller
         } catch (ModelNotFoundException $e) {
             return response()->json(['status' => false, 'message' => 'Entreprise importatrice introuvable.'], 404);
         } catch (Exception $e) {
-            return response()->json(['status' => false, 'message' => 'Erreur lors de la suppression.', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'status'  => false,
+                'message' => 'Erreur lors de la suppression.',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
 }

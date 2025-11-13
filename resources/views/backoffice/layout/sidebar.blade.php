@@ -27,6 +27,30 @@
                 ])
 
                 @include('backoffice.widget.nav_link', [
+                    'url' => route('admin.produits.index'),
+                    'icon' => 'fa-boxes',
+                    'name' => 'sidebar.produits',
+                    'ids' => 'produits-count',
+                    'faIcons' => false
+                ])
+
+                @include('backoffice.widget.nav_link', [
+                    'url' => route('admin.annonces.index'),
+                    'icon' => 'fa-bullhorn',
+                    'name' => __('sidebar.annonces'),
+                    'ids' => 'annonces-count',
+                    'faIcons' => false
+                ])
+
+                @include('backoffice.widget.nav_link', [
+                    'url' => route('admin.flux_commerciaux.index'),
+                    'icon' => 'fa-exchange-alt',
+                    'name' => __('sidebar.flux_commercials'),
+                    'ids' => 'flux-count',
+                    'faIcons' => false
+                ])
+
+                @include('backoffice.widget.nav_link', [
                     'url' => route('admin.actualites.index'),
                     'icon' => 'fa-newspaper',
                     'name' => 'sidebar.actualites',
