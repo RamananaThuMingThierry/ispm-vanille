@@ -503,7 +503,7 @@
                     <div class="col-md-6 col-lg-4">
                         <article class="card card-hover h-100">
                             @if ($a->image)
-                                <img src="{{ asset($a->image) }}" alt="{{ $a->titre }}" class="card-img-top"
+                                <img src="{{ asset(config('public_path.public_path'). '/images/V6.jpg') }}" alt="{{ $a->titre }}" class="card-img-top"
                                     style="height:180px; object-fit:cover;">
                             @endif
                             <div class="card-body">
@@ -644,7 +644,7 @@
                             </div>
 
                             <div class="mt-4 small">
-                                <span class="opacity-75">Restez connectés :</span>
+                                <span class="opacity-75 dancing">Restez connectés :</span>
                                 <div class="mt-2 d-flex gap-2">
                                     <a href="https://www.cci.mg" target="_blank" rel="noopener"
                                         class="btn btn-sm btn-outline-light rounded-circle px-2" title="Site web">
