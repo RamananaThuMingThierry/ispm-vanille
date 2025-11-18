@@ -21,14 +21,14 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="@yield('og_title', 'Plateforme Vanille – Madagascar')">
     <meta property="og:description" content="@yield('og_description', 'Suivez les prix du marché de la vanille, découvrez les producteurs et connectez-vous aux entreprises de Madagascar.')">
-    <meta property="og:image" content="@yield('og_image', asset(config('public_path.public_path').'utiles/icon.png'))">
+    <meta property="og:image" content="@yield('og_image', asset(config('public_path.public_path').'utiles/logo.png'))">
     <meta property="og:url" content="@yield('og_url', url()->current())">
     <meta property="og:site_name" content="Plateforme Vanille">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="@yield('twitter_title', 'Plateforme Vanille – Madagascar')">
     <meta name="twitter:description" content="@yield('twitter_description', 'Prix, disponibilité, producteurs et actualités de la filière vanille à Madagascar.')">
-    <meta name="twitter:image" content="@yield('twitter_image', asset(config('public_path.public_path').'utiles/icon.png'))">
+    <meta name="twitter:image" content="@yield('twitter_image', asset(config('public_path.public_path').'utiles/logo.png'))">
 
     @stack('style')
     @include('frontoffice.layouts.style')

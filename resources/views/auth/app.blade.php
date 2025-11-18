@@ -5,8 +5,8 @@
   <title>@yield('titre') | World of Madagascar Tour</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta http-equiv="content-type" content="text/html; charset=utf-8" />
-  <link rel="icon" href="{{ asset(config('public_path.public_path').'utiles/icon.png') }}" type="image/x-icon">
-  <link rel="shortcut icon" href="{{ asset(config('public_path.public_path').'utiles/icon.png') }}" type="image/x-icon">
+  <link rel="icon" href="{{ asset(config('public_path.public_path').'utiles/logo.png') }}" type="image/x-icon">
+  <link rel="shortcut icon" href="{{ asset(config('public_path.public_path').'utiles/logo.png') }}" type="image/x-icon">
   <meta name="author" content="RAMANANA Thu Ming Thierry" />
   <meta name="description" content="World of Madagascar Tour" />
   <link rel="preconnect" href="https://fonts.gstatic.com/">
