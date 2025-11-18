@@ -10,10 +10,15 @@
                 <div class="card rounded-1 shadow-sm">
                     <div class="row g-0">
                     <div class="col-md-6 col-lg-4 d-none d-md-block">
-                        <div class="d-flex justify-content-center align-items-center h-100">
-                            <img src="{{ asset(config('public_path.public_path'). 'utiles/logo.png') }}"
-                            alt="login form" class="img-fluid" />
-                        </div>
+                                                      <div class="d-flex flex-column justify-content-center align-items-center h-100">
+                                    <img style="width:150px;height:150px;" src="{{ asset(config('public_path.public_path').'utiles/logo.png') }}"
+                                        alt="login form"
+                                        class="img-fluid mb-3" />
+
+                                    <img style="width:150px;height:150px;" src="{{ asset(config('public_path.public_path').'utiles/ccia.jpg') }}"
+                                        alt="login form"
+                                        class="img-fluid" />
+                                </div>
                     </div>
                     <div class="col-md-6 col-lg-8 d-flex align-items-center">
                         <div class="card-body p-3 text-black">
